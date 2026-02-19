@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerBridge · connecting talent to opportunity</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        :root {
+            --bg-primary: #0a0a0c;
+            --bg-secondary: #121218;
+            --bg-card: rgba(18, 18, 24, 0.8);
+            --bg-card-hover: rgba(30, 30, 38, 0.9);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --border-color: rgba(255, 255, 255, 0.05);
+            --border-hover: rgba(139, 0, 0, 0.3);
+            --accent: #8B0000;
+            --accent-light: rgba(139, 0, 0, 0.2);
+            --input-bg: rgba(0, 0, 0, 0.5);
+            --shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f5f5f7;
+            --bg-secondary: #e8e8ed;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-card-hover: rgba(255, 255, 255, 0.95);
+            --text-primary: #1a1a1a;
+            --text-secondary: rgba(0, 0, 0, 0.7);
+            --text-muted: rgba(0, 0, 0, 0.5);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --border-hover: rgba(139, 0, 0, 0.5);
+            --accent: #8B0000;
+            --accent-light: rgba(139, 0, 0, 0.1);
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .glass, .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+            z-index: 3;
+        }
+
+        .top-nav {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0.8rem 2rem;
+            margin-bottom: 2rem;
+            align-items: center;
+            justify-content: flex-end;
+            background: var(--bg-card);
+            backdrop-filter: blur(24px);
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-right: auto;
+            flex-wrap: wrap;
+        }
+        .nav-links a, .nav-right a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 450;
+            font-size: 0.95rem;
+            padding: 0.3rem 0;
+            border-bottom: 1.5px solid transparent;
+            position: relative;
+        }
+        .nav-links a:hover {
+            border-bottom-color: var(--accent);
+        }
+        .nav-right {
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+        }
+
+        /* Saved & Digest indicators in nav - without numbers */
+        .nav-indicator {
+            background: var(--accent);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            position: absolute;
+            top: -4px;
+            right: -8px;
+            display: none;
+        }
+        .nav-indicator.has-items {
+            display: block;
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover {
+            background: var(--accent-light);
+            border-color: var(--accent);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 1.8rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.8rem;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        h1, h2, h3 { font-weight: 500; color: var(--text-primary); }
+        h1 { font-size: 2.8rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.3rem; }
+        .text-secondary { color: var(--text-secondary); }
+
+        /* Tagline styling */
+        .tagline {
+            color: var(--accent);
+            font-size: 1.2rem;
+            letter-spacing: 0.5px;
+            margin-top: 0.5rem;
+            font-weight: 400;
+            border-bottom: 1px solid var(--accent-light);
+            display: inline-block;
+            padding-bottom: 0.3rem;
+        }
+
+        button, .btn {
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 0.7rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.18s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        button.secondary {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        button:hover { background: #9e1a1a; transform: scale(1.01); }
+        button.secondary:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent);
+        }
+
+        .badge {
+            background: var(--accent-light);
+            padding: 0.25rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            border: 1px solid var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .resume-preview {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .resume-section { margin-bottom: 2rem; }
+        .resume-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        .resume-bullet {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .resume-bullet::before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+        }
+        .resume-link {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent);
+        }
+        .resume-link:hover { border-bottom: 1px solid var(--accent); }
+
+        .profile-form {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        .profile-form input, .profile-form select, .profile-form textarea {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 40px;
+            padding: 0.8rem 1.4rem;
+            color: var(--text-primary);
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        .profile-form input:focus, .profile-form select:focus, .profile-form textarea:focus {
+            outline: 2px solid var(--accent);
+            border-color: transparent;
+        }
+        .profile-form label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+            display: block;
+        }
+
+        .resume-type-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .resume-tab {
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .resume-tab.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .manual-entry-section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+        .manual-entry-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+        }
+
+        /* Job vacancies - one after one (vertical list) */
+        .vacancies-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .job-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-bottom: 0;
+        }
+        .job-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        .job-title { 
+            font-size: 1.2rem; 
+            font-weight: 600; 
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+        }
+        .job-metadata {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+            margin-bottom: 0.8rem;
+        }
+        .job-metadata span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .apply-indicator {
+            color: var(--accent);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.8rem;
+        }
+
+        /* Saved & Digest headings */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        .section-header h3 {
+            margin-bottom: 0;
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .section-header .badge {
+            background: var(--accent);
+            color: white;
+            font-size: 0.9rem;
+            padding: 0.3rem 1.2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .digest-item {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            border-left: 3px solid var(--accent);
+        }
+        .digest-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+        }
+        .digest-content {
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .flex { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+        .w-full { width: 100%; }
+        .mt-4 { margin-top: 2rem; }
+        .text-center { text-align: center; }
+        .saved-badge {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            border: 1px solid var(--accent);
+        }
+    </style>
+</head>
+<body data-theme="dark">
+<div class="app-container" id="appRoot">
+    <nav class="top-nav">
+        <div class="nav-links">
+            <a href="#" data-route="/">Home</a>
+            <a href="#" data-route="/dashboard">Dashboard</a>
+            <a href="#" data-route="/ai-resume">AI Resume</a>
+            <a href="#" data-route="/placement-readiness">Placement Readiness</a>
+            <a href="#" data-route="/saved" id="savedNavLink">Saved <span class="nav-indicator" id="savedIndicator"></span></a>
+            <a href="#" data-route="/digest" id="digestNavLink">Digest <span class="nav-indicator" id="digestIndicator"></span></a>
+            <a href="#" data-route="/settings">Settings</a>
+            <a href="#" data-route="/test">Test</a>
+            <a href="#" data-route="/proof">Proof</a>
+            <a href="#" data-route="/about">About</a>
+            <a href="#" data-route="/privacy">Privacy</a>
+        </div>
+        <div class="nav-right">
+            <button class="theme-toggle" id="themeToggle">🌓 theme</button>
+            <a href="#" id="userStateDisplay"></a>
+        </div>
+    </nav>
+    <div class="route-view" id="routeView"></div>
+</div>
+
+<script>
+(function() {
+    const STORAGE_KEYS = {
+        USER_PROFILE: 'careerBridge_userProfile',
+        APPLICATIONS: 'careerBridge_applications',
+        RESUMES: 'careerBridge_resumes', 
+        PLACEMENT: 'careerBridge_placement',
+        EMAIL_LOGS: 'careerBridge_emailLogs',
+        THEME: 'careerBridge_theme',
+        FRESHER_RESUME_DATA: 'careerBridge_fresher_resume_data',
+        EXPERIENCED_RESUME_DATA: 'careerBridge_experienced_resume_data',
+        SAVED_JOBS: 'careerBridge_saved_jobs',
+        DIGEST: 'careerBridge_digest',
+    };
+
+    let userProfile = null;
+    let applications = [];
+    let resumes = [];
+    let placementProfile = { readinessScore: 0, lastCalculated: null, suggestions: [], level: 'new' };
+    let emailLogs = [];
+    let fresherResumeData = null;
+    let experiencedResumeData = null;
+    let savedJobs = [];
+    let digest = [];
+    let currentTheme = localStorage.getItem(STORAGE_KEYS.THEME) || 'dark';
+
+    document.body.setAttribute('data-theme', currentTheme);
+
+    function toggleTheme() {
+        currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.body.setAttribute('data-theme', currentTheme);
+        localStorage.setItem(STORAGE_KEYS.THEME, currentTheme);
+    }
+
+    // Default fresher resume structure
+    const defaultFresherResume = {
+        personal: {
+            name: '',
+            email: '',
+            phone: '',
+            linkedin: '',
+            github: '',
+            portfolio: '',
+            location: ''
+        },
+        summary: '',
+        skills: [],
+        education: [{
+            degree: '',
+            institution: '',
+            year: '',
+            gpa: ''
+        }],
+        projects: [
+            {
+                name: '',
+                technologies: '',
+                bullets: ['', '', '']
+            }
+        ],
+        internships: [
+            {
+                title: '',
+                company: '',
+                duration: '',
+                bullets: ['', '']
+            }
+        ],
+        certifications: [],
+        achievements: [],
+        languages: []
+    };
+
+    // Default experienced resume structure
+    const defaultExperiencedResume = {
+        personal: {
+            name: '',
+            email: '',
+            phone: '',
+            linkedin: '',
+            github: '',
+            portfolio: '',
+            location: ''
+        },
+        summary: '',
+        skills: [],
+        experience: [
+            {
+                title: '',
+                company: '',
+                duration: '',
+                bullets: ['', '', '']
+            },
+            {
+                title: '',
+                company: '',
+                duration: '',
+                bullets: ['', '']
+            }
+        ],
+        projects: [
+            {
+                name: '',
+                technologies: '',
+                bullets: ['', '']
+            }
+        ],
+        education: [{
+            degree: '',
+            institution: '',
+            year: '',
+            gpa: ''
+        }],
+        certifications: [],
+        achievements: []
+    };
+
+    function loadResumeData() {
+        try {
+            fresherResumeData = JSON.parse(localStorage.getItem(STORAGE_KEYS.FRESHER_RESUME_DATA)) || JSON.parse(JSON.stringify(defaultFresherResume));
+            experiencedResumeData = JSON.parse(localStorage.getItem(STORAGE_KEYS.EXPERIENCED_RESUME_DATA)) || JSON.parse(JSON.stringify(defaultExperiencedResume));
+            savedJobs = JSON.parse(localStorage.getItem(STORAGE_KEYS.SAVED_JOBS)) || [];
+            digest = JSON.parse(localStorage.getItem(STORAGE_KEYS.DIGEST)) || [];
+        } catch (e) {
+            fresherResumeData = JSON.parse(JSON.stringify(defaultFresherResume));
+            experiencedResumeData = JSON.parse(JSON.stringify(defaultExperiencedResume));
+            savedJobs = [];
+            digest = [];
+        }
+    }
+
+    function saveFresherResumeData() {
+        localStorage.setItem(STORAGE_KEYS.FRESHER_RESUME_DATA, JSON.stringify(fresherResumeData));
+    }
+
+    function saveExperiencedResumeData() {
+        localStorage.setItem(STORAGE_KEYS.EXPERIENCED_RESUME_DATA, JSON.stringify(experiencedResumeData));
+    }
+
+    function saveSavedJobs() {
+        localStorage.setItem(STORAGE_KEYS.SAVED_JOBS, JSON.stringify(savedJobs));
+        updateNavIndicators();
+    }
+
+    function saveDigest() {
+        localStorage.setItem(STORAGE_KEYS.DIGEST, JSON.stringify(digest));
+        updateNavIndicators();
+    }
+
+    function updateNavIndicators() {
+        const savedIndicator = document.getElementById('savedIndicator');
+        const digestIndicator = document.getElementById('digestIndicator');
+        if (savedIndicator) {
+            if (savedJobs.length > 0) {
+                savedIndicator.classList.add('has-items');
+            } else {
+                savedIndicator.classList.remove('has-items');
+            }
+        }
+        if (digestIndicator) {
+            if (digest.length > 0) {
+                digestIndicator.classList.add('has-items');
+            } else {
+                digestIndicator.classList.remove('has-items');
+            }
+        }
+    }
+
+    function addToDigest(message, type = 'info') {
+        const entry = {
+            id: Date.now(),
+            date: new Date().toLocaleString(),
+            message,
+            type,
+            read: false
+        };
+        digest.unshift(entry);
+        if (digest.length > 20) digest.pop();
+        saveDigest();
+    }
+
+    function loadAll() {
+        try {
+            userProfile = JSON.parse(localStorage.getItem(STORAGE_KEYS.USER_PROFILE) || 'null');
+            applications = JSON.parse(localStorage.getItem(STORAGE_KEYS.APPLICATIONS) || '[]');
+            resumes = JSON.parse(localStorage.getItem(STORAGE_KEYS.RESUMES) || '[]');
+            placementProfile = JSON.parse(localStorage.getItem(STORAGE_KEYS.PLACEMENT) || '{"readinessScore":0,"lastCalculated":null,"suggestions":[],"level":"new"}');
+            emailLogs = JSON.parse(localStorage.getItem(STORAGE_KEYS.EMAIL_LOGS) || '[]');
+            loadResumeData();
+        } catch (e) { console.error('Error loading data:', e); }
+        if (!userProfile) userProfile = null; 
+    }
+    
+    function saveUserProfile() { localStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(userProfile)); }
+    function saveApplications() { localStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(applications)); }
+    function saveResumes() { localStorage.setItem(STORAGE_KEYS.RESUMES, JSON.stringify(resumes)); }
+    function savePlacement() { localStorage.setItem(STORAGE_KEYS.PLACEMENT, JSON.stringify(placementProfile)); }
+    function saveEmailLogs() { localStorage.setItem(STORAGE_KEYS.EMAIL_LOGS, JSON.stringify(emailLogs)); }
+
+    loadAll();
+
+    function getUserState() {
+        if (!userProfile) return 'new user';
+        if (!userProfile.onboardingCompleted) return 'onboarding incomplete';
+        if (applications.some(a => a.status === 'Selected' || a.status === 'Rejected')) return 'shipped'; 
+        if (applications.length > 0) return 'active user';
+        return 'returning user';
+    }
+
+    function guardOnboarding(route) {
+        // Don't redirect to onboarding - let users access everything freely
+        return true;
+    }
+
+    function renderFresherResume() {
+        const data = fresherResumeData;
+        return `
+            <div class="resume-preview">
+                <div style="margin-bottom:2rem;">
+                    <h2 style="font-size:2rem; margin-bottom:0.3rem;">${data.personal.name || 'Your Name'}</h2>
+                    <div style="color:var(--text-secondary);">${data.personal.location || 'Location'}</div>
+                    <div style="display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:1rem; padding:1rem; background:var(--bg-secondary); border-radius:12px;">
+                        <span>📧 ${data.personal.email || 'email@example.com'}</span>
+                        <span>📱 ${data.personal.phone || '+1 234 567 8900'}</span>
+                        ${data.personal.linkedin ? `<span>🔗 <a href="https://${data.personal.linkedin}" target="_blank" class="resume-link">LinkedIn</a></span>` : ''}
+                        ${data.personal.github ? `<span>💻 <a href="https://${data.personal.github}" target="_blank" class="resume-link">GitHub</a></span>` : ''}
+                        ${data.personal.portfolio ? `<span>🌐 <a href="https://${data.personal.portfolio}" target="_blank" class="resume-link">Portfolio</a></span>` : ''}
+                    </div>
+                </div>
+                
+                <div class="resume-section">
+                    <div class="resume-section-title">SUMMARY</div>
+                    <div class="resume-item">${data.summary || 'Add your professional summary'}</div>
+                </div>
+                
+                <div class="resume-section">
+                    <div class="resume-section-title">SKILLS</div>
+                    <div class="resume-item">
+                        ${data.skills.length > 0 ? 
+                            data.skills.map(skill => `<span class="badge" style="margin-right:0.5rem; margin-bottom:0.5rem;">${skill}</span>`).join('') 
+                            : '<span class="text-secondary">Add your skills</span>'}
+                    </div>
+                </div>
+                
+                <div class="resume-section">
+                    <div class="resume-section-title">EDUCATION</div>
+                    ${data.education.map(edu => `
+                        <div class="resume-item">
+                            <div style="font-weight:600;">${edu.degree || 'Degree'}</div>
+                            <div>${edu.institution || 'Institution'} · ${edu.year || 'Year'}</div>
+                            <div style="color:var(--text-muted);">GPA: ${edu.gpa || 'N/A'}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="resume-section">
+                    <div class="resume-section-title">INTERNSHIPS</div>
+                    ${data.internships.map(intern => `
+                        <div class="resume-item">
+                            <div style="font-weight:600;">${intern.title || 'Internship Title'}</div>
+                            <div style="color:var(--text-muted); margin-bottom:0.8rem;">${intern.company || 'Company'} · ${intern.duration || 'Duration'}</div>
+                            ${intern.bullets.filter(b => b).map(bullet => `<div class="resume-bullet">${bullet}</div>`).join('')}
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="resume-section">
+                    <div class="resume-section-title">PROJECTS</div>
+                    ${data.projects.map(proj => `
+                        <div class="resume-item">
+                            <div style="font-weight:600;">${proj.name || 'Project Name'}</div>
+                            <div style="color:var(--text-muted); margin-bottom:0.5rem;">${proj.technologies || 'Technologies'}</div>
+                            ${proj.bullets.filter(b => b).map(bullet => `<div class="resume-bullet">${bullet}</div>`).join('')}
+                        </div>
+                    `).join('')}
+                </div>
+                
+                ${data.certifications.length > 0 ? `
+                <div class="resume-section">
+                    <div class="resume-section-title">CERTIFICATIONS</div>
+                    ${data.certifications.map(cert => `<div class="resume-bullet">${cert}</div>`).join('')}
+                </div>
+                ` : ''}
+            </div>
+        `;
+    }
+
+    function renderExperiencedResume() {
+        const data = experiencedResumeData;
+        return `
+            <div class="resume-preview">
+                <div style="margin-bottom:2rem;">
+                    <h2 style="font-size:2rem; margin-bottom:0.3rem;">${data.personal.name || 'Your Name'}</h2>
+                    <div style="color:var(--text-secondary);">${data.personal.location || 'Location'}</div>
+                    <div style="display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:1rem; padding:1rem; background:var(--bg-secondary); border-radius:12px;">
+                        <span>📧 ${data.personal.email || 'email@example.com'}</span>
+                        <span>📱 ${data.personal.phone || '+1 234 567 8900'}</span>
+                        ${data.personal.linkedin ? `<span>🔗 <a href="https://${data.personal.linkedin}" target="_blank" class="resume-link">LinkedIn</a></span>` : ''}
+                        ${data.personal.github ? `<span>💻 <a href="https://${data.personal.github}" target="_blank" class="resume-link">GitHub</a></span>` : ''}
+                        ${data.personal.portfolio ? `<span>🌐 <a href="https://${data.personal.portfolio}" target="_blank" class="resume-link">Portfolio</a></span>` : ''}
+                    </div>
+                </div>
+                
+                <div class="resume-section">
+                    <div class="resume-section-title">SUMMARY</div>
+                    <div class="resume-item">${data.summary || 'Add your professional summary'}</div>
+                </div>
+                
+                <div class="resume-section">
+                    <div class="resume-section-title">SKILLS</div>
+                    <div class="resume-item">
+                        ${data.skills.length > 0 ? 
+                            data.skills.map(skill => `<span class="badge" style="margin-right:0.5rem; margin-bottom:0.5rem;">${skill}</span>`).join('') 
+                            : '<span class="text-secondary">Add your skills</span>'}
+                    </div>
+                </div>
+                
+                <div class="resume-section">
+                    <div class="resume-section-title">EXPERIENCE</div>
+                    ${data.experience.map(exp => `
+                        <div class="resume-item">
+                            <div style="font-weight:600;">${exp.title || 'Position'}</div>
+                            <div style="color:var(--text-muted); margin-bottom:0.8rem;">${exp.company || 'Company'} · ${exp.duration || 'Duration'}</div>
+                            ${exp.bullets.filter(b => b).map(bullet => `<div class="resume-bullet">${bullet}</div>`).join('')}
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="resume-section">
+                    <div class="resume-section-title">PROJECTS</div>
+                    ${data.projects.map(proj => `
+                        <div class="resume-item">
+                            <div style="font-weight:600;">${proj.name || 'Project Name'}</div>
+                            <div style="color:var(--text-muted); margin-bottom:0.5rem;">${proj.technologies || 'Technologies'}</div>
+                            ${proj.bullets.filter(b => b).map(bullet => `<div class="resume-bullet">${bullet}</div>`).join('')}
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="resume-section">
+                    <div class="resume-section-title">EDUCATION</div>
+                    ${data.education.map(edu => `
+                        <div class="resume-item">
+                            <div style="font-weight:600;">${edu.degree || 'Degree'}</div>
+                            <div>${edu.institution || 'Institution'} · ${edu.year || 'Year'}</div>
+                            <div style="color:var(--text-muted);">GPA: ${edu.gpa || 'N/A'}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                ${data.certifications.length > 0 ? `
+                <div class="resume-section">
+                    <div class="resume-section-title">CERTIFICATIONS</div>
+                    ${data.certifications.map(cert => `<div class="resume-bullet">${cert}</div>`).join('')}
+                </div>
+                ` : ''}
+            </div>
+        `;
+    }
+
+    const jobVacancies = [
+        { company: "Google", role: "Frontend Developer", location: "Bangalore", type: "Full-time", deadline: "2024-04-15", salary: "25-35 LPA", applyUrl: "https://careers.google.com/jobs" },
+        { company: "Google", role: "Backend Engineer", location: "Hyderabad", type: "Full-time", deadline: "2024-04-20", salary: "28-40 LPA", applyUrl: "https://careers.google.com/jobs" },
+        { company: "Microsoft", role: "SDE II", location: "Noida", type: "Full-time", deadline: "2024-04-18", salary: "30-45 LPA", applyUrl: "https://careers.microsoft.com" },
+        { company: "Microsoft", role: "Cloud Architect", location: "Pune", type: "Full-time", deadline: "2024-04-25", salary: "35-50 LPA", applyUrl: "https://careers.microsoft.com" },
+        { company: "Amazon", role: "Software Engineer", location: "Chennai", type: "Full-time", deadline: "2024-04-12", salary: "22-32 LPA", applyUrl: "https://amazon.jobs" },
+        { company: "Amazon", role: "DevOps Engineer", location: "Mumbai", type: "Full-time", deadline: "2024-04-22", salary: "24-36 LPA", applyUrl: "https://amazon.jobs" },
+        { company: "Meta", role: "Product Manager", location: "Gurgaon", type: "Full-time", deadline: "2024-04-28", salary: "40-60 LPA", applyUrl: "https://metacareers.com" },
+        { company: "Netflix", role: "Senior Frontend", location: "Remote", type: "Contract", deadline: "2024-04-30", salary: "50-70 LPA", applyUrl: "https://jobs.netflix.com" },
+        { company: "Goldman Sachs", role: "Analyst", location: "Bangalore", type: "Full-time", deadline: "2024-04-25", salary: "20-30 LPA", applyUrl: "https://goldmansachs.com/careers" },
+        { company: "Uber", role: "Backend Engineer", location: "Hyderabad", type: "Full-time", deadline: "2024-04-28", salary: "28-38 LPA", applyUrl: "https://uber.com/careers" },
+        { company: "Adobe", role: "Frontend Developer", location: "Noida", type: "Full-time", deadline: "2024-05-01", salary: "24-34 LPA", applyUrl: "https://adobe.com/careers" },
+        { company: "Salesforce", role: "Software Engineer", location: "Hyderabad", type: "Full-time", deadline: "2024-04-30", salary: "30-42 LPA", applyUrl: "https://salesforce.com/careers" },
+        { company: "Oracle", role: "Cloud Engineer", location: "Bangalore", type: "Full-time", deadline: "2024-04-26", salary: "26-38 LPA", applyUrl: "https://oracle.com/careers" },
+        { company: "Intel", role: "Software Developer", location: "Pune", type: "Full-time", deadline: "2024-04-29", salary: "22-32 LPA", applyUrl: "https://intel.com/careers" },
+        { company: "Cisco", role: "Network Engineer", location: "Bangalore", type: "Full-time", deadline: "2024-04-27", salary: "20-30 LPA", applyUrl: "https://cisco.com/careers" },
+        { company: "IBM", role: "Data Scientist", location: "Hyderabad", type: "Full-time", deadline: "2024-05-02", salary: "25-36 LPA", applyUrl: "https://ibm.com/careers" },
+        { company: "Dell", role: "DevOps Engineer", location: "Chennai", type: "Full-time", deadline: "2024-04-28", salary: "22-32 LPA", applyUrl: "https://dell.com/careers" },
+        { company: "Accenture", role: "Software Engineer", location: "Mumbai", type: "Full-time", deadline: "2024-04-30", salary: "18-26 LPA", applyUrl: "https://accenture.com/careers" },
+        { company: "Infosys", role: "Full Stack Developer", location: "Pune", type: "Full-time", deadline: "2024-05-03", salary: "16-24 LPA", applyUrl: "https://infosys.com/careers" },
+        { company: "TCS", role: "Java Developer", location: "Bangalore", type: "Full-time", deadline: "2024-04-29", salary: "15-22 LPA", applyUrl: "https://tcs.com/careers" }
+    ];
+
+    function saveJob(job) {
+        if (!savedJobs.some(j => j.company === job.company && j.role === job.role)) {
+            savedJobs.push({ ...job, savedAt: new Date().toISOString() });
+            saveSavedJobs();
+            addToDigest(`Saved job: ${job.company} - ${job.role}`, 'save');
+            return true;
+        }
+        return false;
+    }
+
+    function renderRoute() {
+        let hash = window.location.hash.slice(1) || '/';
+        if (hash === '') hash = '/';
+        if (!hash.startsWith('/')) hash = '/' + hash;
+
+        const view = document.getElementById('routeView');
+        if (!view) return;
+
+        const stateSpan = document.getElementById('userStateDisplay');
+        if (stateSpan) {
+            if (hash === '/') {
+                stateSpan.innerText = "let's start";
+                stateSpan.style.color = "var(--accent)";
+            } else {
+                stateSpan.innerText = getUserState();
+                stateSpan.style.color = "";
+            }
+        }
+
+        const themeBtn = document.getElementById('themeToggle');
+        if (themeBtn) {
+            themeBtn.replaceWith(themeBtn.cloneNode(true));
+            document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+        }
+
+        // Update nav indicators
+        updateNavIndicators();
+
+        if (hash === '/') {
+            view.innerHTML = `
+                <div class="glass" style="padding:3.5rem; text-align:center;">
+                    <h1 style="font-size:3.2rem; margin-bottom:0.5rem;">CareerBridge</h1>
+                    <div class="tagline">connecting talent to opportunity</div>
+                    <p class="text-secondary" style="max-width:600px; margin:2rem auto 1.5rem;">Your complete career platform · fresher & experienced tracks</p>
+                    <button class="btn" data-route="/dashboard" style="min-width:200px;">explore opportunities</button>
+                </div>
+            `;
+        }
+        else if (hash === '/saved') {
+            view.innerHTML = `
+                <div class="glass-card" style="padding:2rem;">
+                    <div class="section-header">
+                        <h3>💾 SAVED JOBS</h3>
+                        <span class="badge">${savedJobs.length}</span>
+                    </div>
+                    <div class="vacancies-list">
+                        ${savedJobs.length > 0 ? 
+                            savedJobs.map(job => `
+                                <div class="job-card" onclick="window.open('${job.applyUrl}', '_blank')">
+                                    <div class="job-title">${job.company} · ${job.role}</div>
+                                    <div class="job-metadata">
+                                        <span>📍 ${job.location}</span>
+                                        <span>💼 ${job.type}</span>
+                                        <span>💰 ${job.salary}</span>
+                                        <span>⏰ ${job.deadline}</span>
+                                    </div>
+                                    <div style="display:flex; gap:1rem; margin-top:0.8rem;">
+                                        <span class="saved-badge">saved on ${new Date(job.savedAt).toLocaleDateString()}</span>
+                                    </div>
+                                </div>
+                            `).join('') 
+                            : '<div class="text-secondary" style="padding:2rem; text-align:center;">No saved jobs yet</div>'}
+                    </div>
+                </div>
+            `;
+        }
+        else if (hash === '/digest') {
+            view.innerHTML = `
+                <div class="glass-card" style="padding:2rem;">
+                    <div class="section-header">
+                        <h3>📰 DIGEST</h3>
+                        <span class="badge">${digest.length}</span>
+                    </div>
+                    <div style="max-height:600px; overflow-y:auto;">
+                        ${digest.length > 0 ? 
+                            digest.map(d => `
+                                <div class="digest-item">
+                                    <div class="digest-date">${d.date}</div>
+                                    <div class="digest-content">${d.message}</div>
+                                </div>
+                            `).join('') 
+                            : '<div class="text-secondary" style="padding:2rem; text-align:center;">No digest entries yet</div>'}
+                    </div>
+                </div>
+            `;
+        }
+        else if (hash === '/dashboard') {
+            // Create job vacancies list - one after one (vertical)
+            const jobsList = jobVacancies.map(job => {
+                const isSaved = savedJobs.some(j => j.company === job.company && j.role === job.role);
+                return `
+                    <div class="job-card">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                            <div class="job-title">${job.company} · ${job.role}</div>
+                            ${isSaved ? '<span class="saved-badge">saved</span>' : ''}
+                        </div>
+                        <div class="job-metadata">
+                            <span>📍 ${job.location}</span>
+                            <span>💼 ${job.type}</span>
+                            <span>💰 ${job.salary}</span>
+                            <span>⏰ ${job.deadline}</span>
+                        </div>
+                        <div style="display:flex; gap:1rem; margin-top:0.8rem;">
+                            <button class="btn secondary apply-btn" style="flex:1; padding:0.5rem;" onclick="window.open('${job.applyUrl}', '_blank')">apply</button>
+                            <button class="btn secondary save-btn" style="flex:0.5; padding:0.5rem;" data-job='${JSON.stringify(job).replace(/'/g, "&apos;")}'>${isSaved ? 'saved' : 'save'}</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Generate digest entries
+            const digestEntries = digest.length > 0 ? 
+                digest.slice(0,5).map(d => `
+                    <div class="digest-item">
+                        <div class="digest-date">${d.date}</div>
+                        <div class="digest-content">${d.message}</div>
+                    </div>
+                `).join('') : 
+                '<div class="text-secondary" style="padding:1rem; text-align:center;">No digest entries yet</div>';
+
+            view.innerHTML = `
+                <div class="grid-2">
+                    <div class="glass-card" style="padding:1.8rem;">
+                        <div class="section-header">
+                            <h3>📋 JOB VACANCIES</h3>
+                            <span class="badge">${jobVacancies.length} openings</span>
+                        </div>
+                        <div class="vacancies-list">
+                            ${jobsList}
+                        </div>
+                    </div>
+                    
+                    <div style="display:flex; flex-direction:column; gap:1.8rem;">
+                        <div class="glass-card" style="padding:1.8rem;">
+                            <div class="section-header">
+                                <h3>📊 STATS & NEXT ACTION</h3>
+                                <span class="badge">live</span>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-value">${applications.length}</div>
+                                    <div class="stat-label">applications</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">${savedJobs.length}</div>
+                                    <div class="stat-label">saved jobs</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">${placementProfile.readinessScore || 0}%</div>
+                                    <div class="stat-label">readiness</div>
+                                </div>
+                            </div>
+                            <div style="background:var(--bg-card); padding:1rem; border-radius:12px; margin-top:0.5rem;">
+                                <div style="font-size:1.1rem; margin-bottom:0.8rem; color:var(--accent);">→ ${recommendedNextAction()}</div>
+                                <button data-route="/add-application" class="btn w-full">track application</button>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card" style="padding:1.8rem;">
+                            <div class="section-header">
+                                <h3>💾 SAVED</h3>
+                                <span class="badge">${savedJobs.length}</span>
+                            </div>
+                            <div style="max-height:150px; overflow-y:auto;">
+                                ${savedJobs.length > 0 ? 
+                                    savedJobs.slice(0,3).map(job => `
+                                        <div style="padding:0.8rem; background:var(--bg-secondary); border-radius:8px; margin-bottom:0.5rem; cursor:pointer;" onclick="window.location.hash='#/saved'">
+                                            <div style="font-weight:500;">${job.company}</div>
+                                            <div style="font-size:0.9rem; color:var(--text-secondary);">${job.role}</div>
+                                        </div>
+                                    `).join('') + (savedJobs.length > 3 ? '<div class="text-secondary" style="padding:0.5rem; text-align:center; cursor:pointer;" onclick="window.location.hash=\'#/saved\'">view all saved →</div>' : '')
+                                    : '<div class="text-secondary" style="padding:0.5rem;">No saved jobs yet</div>'}
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card" style="padding:1.8rem;">
+                            <div class="section-header">
+                                <h3>📰 DIGEST</h3>
+                                <span class="badge">${digest.length}</span>
+                            </div>
+                            <div style="max-height:200px; overflow-y:auto;">
+                                ${digestEntries}
+                                ${digest.length > 5 ? '<div class="text-secondary" style="padding:0.5rem; text-align:center; cursor:pointer;" onclick="window.location.hash=\'#/digest\'">view all →</div>' : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card" style="padding:1.8rem;">
+                            <h3 style="margin-bottom:1rem;">resumes</h3>
+                            <div style="display:flex; gap:1rem;">
+                                <button data-route="/ai-resume" class="btn secondary w-full">fresher</button>
+                                <button data-route="/ai-resume?type=experienced" class="btn secondary w-full">experienced</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add save button functionality
+            document.querySelectorAll('.save-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const jobData = btn.getAttribute('data-job');
+                    if (jobData) {
+                        try {
+                            const job = JSON.parse(jobData.replace(/&apos;/g, "'"));
+                            if (saveJob(job)) {
+                                btn.textContent = 'saved';
+                                addToDigest(`Job saved: ${job.company} - ${job.role}`, 'save');
+                                renderRoute(); // Refresh to update saved count
+                            }
+                        } catch (err) {
+                            console.error('Error saving job:', err);
+                        }
+                    }
+                });
+            });
+        }
+        else if (hash === '/ai-resume' || hash === '/ai-resume?type=experienced') {
+            const isExperienced = hash.includes('experienced');
+            const currentData = isExperienced ? experiencedResumeData : fresherResumeData;
+            const resumeType = isExperienced ? 'experienced' : 'fresher';
+            
+            view.innerHTML = `
+                <div class="glass-card" style="padding:2rem;">
+                    <div class="resume-type-tabs">
+                        <button class="resume-tab ${!isExperienced ? 'active' : ''}" data-route="/ai-resume">🎓 fresher resume</button>
+                        <button class="resume-tab ${isExperienced ? 'active' : ''}" data-route="/ai-resume?type=experienced">💼 experienced resume</button>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div>
+                            <h3 style="margin-bottom:1rem;">preview</h3>
+                            ${isExperienced ? renderExperiencedResume() : renderFresherResume()}
+                        </div>
+                        
+                        <div>
+                            <h3 style="margin-bottom:1rem;">manual entry</h3>
+                            <div style="background:var(--bg-card); border-radius:16px; padding:1.5rem; max-height:600px; overflow-y:auto;">
+                                <form id="resumeManualForm">
+                                    <h4 style="margin:1rem 0 0.5rem;">personal details</h4>
+                                    <input type="text" id="fullName" placeholder="full name" value="${currentData.personal.name || userProfile?.fullName || ''}">
+                                    <input type="email" id="email" placeholder="email" value="${currentData.personal.email || userProfile?.email || ''}">
+                                    <input type="tel" id="phone" placeholder="phone" value="${currentData.personal.phone || userProfile?.phone || ''}">
+                                    <input type="text" id="linkedin" placeholder="linkedin username" value="${currentData.personal.linkedin || userProfile?.linkedin || ''}">
+                                    <input type="text" id="github" placeholder="github username" value="${currentData.personal.github || userProfile?.github || ''}">
+                                    <input type="text" id="portfolio" placeholder="portfolio url" value="${currentData.personal.portfolio || userProfile?.portfolio || ''}">
+                                    <input type="text" id="location" placeholder="location" value="${currentData.personal.location || ''}">
+                                    
+                                    <h4 style="margin:1rem 0 0.5rem;">professional summary</h4>
+                                    <textarea id="summary" rows="3" placeholder="write your summary...">${currentData.summary || ''}</textarea>
+                                    
+                                    <h4 style="margin:1rem 0 0.5rem;">skills (comma separated)</h4>
+                                    <input type="text" id="skills" placeholder="JavaScript, React, Node.js" value="${currentData.skills.join(', ')}">
+                                    
+                                    <h4 style="margin:1rem 0 0.5rem;">education</h4>
+                                    <div id="education-container">
+                                        ${currentData.education.map((edu, index) => `
+                                            <div class="manual-entry-item">
+                                                <input type="text" class="edu-degree" placeholder="degree" value="${edu.degree}">
+                                                <input type="text" class="edu-institution" placeholder="institution" value="${edu.institution}">
+                                                <input type="text" class="edu-year" placeholder="year" value="${edu.year}">
+                                                <input type="text" class="edu-gpa" placeholder="gpa" value="${edu.gpa}">
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                    <button type="button" id="addEducation" class="btn secondary" style="margin:0.5rem 0;">+ add education</button>
+                                    
+                                    ${isExperienced ? `
+                                        <h4 style="margin:1rem 0 0.5rem;">work experience</h4>
+                                        <div id="experience-container">
+                                            ${currentData.experience.map((exp, index) => `
+                                                <div class="manual-entry-item">
+                                                    <input type="text" class="exp-title" placeholder="job title" value="${exp.title}">
+                                                    <input type="text" class="exp-company" placeholder="company" value="${exp.company}">
+                                                    <input type="text" class="exp-duration" placeholder="duration" value="${exp.duration}">
+                                                    <textarea class="exp-bullets" placeholder="bullets (one per line)">${exp.bullets.join('\n')}</textarea>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                        <button type="button" id="addExperience" class="btn secondary" style="margin:0.5rem 0;">+ add experience</button>
+                                    ` : `
+                                        <h4 style="margin:1rem 0 0.5rem;">internships</h4>
+                                        <div id="internships-container">
+                                            ${currentData.internships.map((intern, index) => `
+                                                <div class="manual-entry-item">
+                                                    <input type="text" class="intern-title" placeholder="internship title" value="${intern.title}">
+                                                    <input type="text" class="intern-company" placeholder="company" value="${intern.company}">
+                                                    <input type="text" class="intern-duration" placeholder="duration" value="${intern.duration}">
+                                                    <textarea class="intern-bullets" placeholder="bullets (one per line)">${intern.bullets.join('\n')}</textarea>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                        <button type="button" id="addInternship" class="btn secondary" style="margin:0.5rem 0;">+ add internship</button>
+                                    `}
+                                    
+                                    <h4 style="margin:1rem 0 0.5rem;">projects</h4>
+                                    <div id="projects-container">
+                                        ${currentData.projects.map((proj, index) => `
+                                            <div class="manual-entry-item">
+                                                <input type="text" class="proj-name" placeholder="project name" value="${proj.name}">
+                                                <input type="text" class="proj-tech" placeholder="technologies" value="${proj.technologies}">
+                                                <textarea class="proj-bullets" placeholder="bullets (one per line)">${proj.bullets.join('\n')}</textarea>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                    <button type="button" id="addProject" class="btn secondary" style="margin:0.5rem 0;">+ add project</button>
+                                    
+                                    <h4 style="margin:1rem 0 0.5rem;">certifications (one per line)</h4>
+                                    <textarea id="certifications" rows="3" placeholder="AWS Certified&#10;MongoDB Associate">${currentData.certifications.join('\n')}</textarea>
+                                    
+                                    <button type="submit" class="btn w-full" style="margin-top:1.5rem;">save resume</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add event listeners for manual form
+            document.getElementById('addEducation')?.addEventListener('click', () => {
+                const container = document.getElementById('education-container');
+                const newEdu = document.createElement('div');
+                newEdu.className = 'manual-entry-item';
+                newEdu.innerHTML = `
+                    <input type="text" class="edu-degree" placeholder="degree" value="">
+                    <input type="text" class="edu-institution" placeholder="institution" value="">
+                    <input type="text" class="edu-year" placeholder="year" value="">
+                    <input type="text" class="edu-gpa" placeholder="gpa" value="">
+                `;
+                container.appendChild(newEdu);
+            });
+
+            if (isExperienced) {
+                document.getElementById('addExperience')?.addEventListener('click', () => {
+                    const container = document.getElementById('experience-container');
+                    const newExp = document.createElement('div');
+                    newExp.className = 'manual-entry-item';
+                    newExp.innerHTML = `
+                        <input type="text" class="exp-title" placeholder="job title" value="">
+                        <input type="text" class="exp-company" placeholder="company" value="">
+                        <input type="text" class="exp-duration" placeholder="duration" value="">
+                        <textarea class="exp-bullets" placeholder="bullets (one per line)"></textarea>
+                    `;
+                    container.appendChild(newExp);
+                });
+            } else {
+                document.getElementById('addInternship')?.addEventListener('click', () => {
+                    const container = document.getElementById('internships-container');
+                    const newIntern = document.createElement('div');
+                    newIntern.className = 'manual-entry-item';
+                    newIntern.innerHTML = `
+                        <input type="text" class="intern-title" placeholder="internship title" value="">
+                        <input type="text" class="intern-company" placeholder="company" value="">
+                        <input type="text" class="intern-duration" placeholder="duration" value="">
+                        <textarea class="intern-bullets" placeholder="bullets (one per line)"></textarea>
+                    `;
+                    container.appendChild(newIntern);
+                });
+            }
+
+            document.getElementById('addProject')?.addEventListener('click', () => {
+                const container = document.getElementById('projects-container');
+                const newProj = document.createElement('div');
+                newProj.className = 'manual-entry-item';
+                newProj.innerHTML = `
+                    <input type="text" class="proj-name" placeholder="project name" value="">
+                    <input type="text" class="proj-tech" placeholder="technologies" value="">
+                    <textarea class="proj-bullets" placeholder="bullets (one per line)"></textarea>
+                `;
+                container.appendChild(newProj);
+            });
+
+            document.getElementById('resumeManualForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Collect all data
+                const formData = {
+                    personal: {
+                        name: document.getElementById('fullName').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        linkedin: document.getElementById('linkedin').value,
+                        github: document.getElementById('github').value,
+                        portfolio: document.getElementById('portfolio').value,
+                        location: document.getElementById('location').value
+                    },
+                    summary: document.getElementById('summary').value,
+                    skills: document.getElementById('skills').value.split(',').map(s => s.trim()).filter(Boolean),
+                    education: [],
+                    projects: [],
+                    certifications: document.getElementById('certifications').value.split('\n').filter(Boolean)
+                };
+
+                // Collect education
+                document.querySelectorAll('#education-container .manual-entry-item').forEach(item => {
+                    formData.education.push({
+                        degree: item.querySelector('.edu-degree')?.value || '',
+                        institution: item.querySelector('.edu-institution')?.value || '',
+                        year: item.querySelector('.edu-year')?.value || '',
+                        gpa: item.querySelector('.edu-gpa')?.value || ''
+                    });
+                });
+
+                // Collect projects
+                document.querySelectorAll('#projects-container .manual-entry-item').forEach(item => {
+                    const bullets = item.querySelector('.proj-bullets')?.value.split('\n').filter(b => b.trim()) || [];
+                    formData.projects.push({
+                        name: item.querySelector('.proj-name')?.value || '',
+                        technologies: item.querySelector('.proj-tech')?.value || '',
+                        bullets: bullets
+                    });
+                });
+
+                if (isExperienced) {
+                    formData.experience = [];
+                    document.querySelectorAll('#experience-container .manual-entry-item').forEach(item => {
+                        const bullets = item.querySelector('.exp-bullets')?.value.split('\n').filter(b => b.trim()) || [];
+                        formData.experience.push({
+                            title: item.querySelector('.exp-title')?.value || '',
+                            company: item.querySelector('.exp-company')?.value || '',
+                            duration: item.querySelector('.exp-duration')?.value || '',
+                            bullets: bullets
+                        });
+                    });
+                    
+                    experiencedResumeData = { ...experiencedResumeData, ...formData };
+                    saveExperiencedResumeData();
+                    addToDigest('Experienced resume updated', 'resume');
+                } else {
+                    formData.internships = [];
+                    document.querySelectorAll('#internships-container .manual-entry-item').forEach(item => {
+                        const bullets = item.querySelector('.intern-bullets')?.value.split('\n').filter(b => b.trim()) || [];
+                        formData.internships.push({
+                            title: item.querySelector('.intern-title')?.value || '',
+                            company: item.querySelector('.intern-company')?.value || '',
+                            duration: item.querySelector('.intern-duration')?.value || '',
+                            bullets: bullets
+                        });
+                    });
+                    
+                    fresherResumeData = { ...fresherResumeData, ...formData };
+                    saveFresherResumeData();
+                    addToDigest('Fresher resume updated', 'resume');
+                }
+
+                alert('resume saved successfully');
+                renderRoute(); // Refresh preview
+            });
+        }
+        else if (hash === '/add-application') {
+            view.innerHTML = `
+                <div class="glass-card" style="max-width:600px; margin:2rem auto; padding:2rem;">
+                    <h2>track application</h2>
+                    <form id="appForm" class="profile-form">
+                        <label>company *</label><input id="companyName" required>
+                        <label>role *</label><input id="role" required>
+                        <label>job link *</label><input id="jobLink" required>
+                        <label>resume used *</label><input id="resumeUsed" required>
+                        <label>deadline *</label><input id="deadline" type="date" required>
+                        <label>status</label>
+                        <select id="status">
+                            <option>Not Applied</option>
+                            <option>Applied</option>
+                            <option>Rejected</option>
+                            <option>Selected</option>
+                        </select>
+                        <label>notes</label><textarea id="notes"></textarea>
+                        <button type="submit" class="btn w-full mt-4">save application</button>
+                    </form>
+                </div>
+            `;
+            document.getElementById('appForm')?.addEventListener('submit', (e)=>{
+                e.preventDefault();
+                const companyName = document.getElementById('companyName').value;
+                const role = document.getElementById('role').value;
+                const jobLink = document.getElementById('jobLink').value;
+                const resumeUsed = document.getElementById('resumeUsed').value;
+                const deadline = document.getElementById('deadline').value;
+                const status = document.getElementById('status').value;
+                
+                if (!companyName || !role || !jobLink || !resumeUsed || !deadline) {
+                    alert('fill all required fields');
+                    return;
+                }
+                
+                const newApp = {
+                    id: Date.now(),
+                    companyName, role, jobLink, resumeUsed, deadline,
+                    status: status,
+                    appliedDate: new Date().toISOString().split('T')[0],
+                    notes: document.getElementById('notes').value,
+                    emailSent: false
+                };
+                applications.push(newApp);
+                saveApplications();
+                addToDigest(`Application tracked: ${companyName} - ${role}`, 'application');
+                calculateScore(true);
+                window.location.hash = '#/dashboard';
+            });
+        }
+        else if (hash === '/placement-readiness') {
+            const score = placementProfile.readinessScore || calculateScore();
+            const level = score >=80 ? 'Ready' : (score>=60 ? 'Almost Ready' : 'Needs Work');
+            view.innerHTML = `
+                <div class="glass-card" style="padding:2rem; max-width:800px; margin:0 auto;">
+                    <div class="section-header">
+                        <h3>📊 PLACEMENT READINESS</h3>
+                        <span class="badge">${level}</span>
+                    </div>
+                    <div style="font-size:4rem; font-weight:200; text-align:center; margin:2rem 0;">${score}% <span style="font-size:1.2rem; color:var(--text-muted);">${level}</span></div>
+                    <p class="text-secondary text-center">last calc: ${placementProfile.lastCalculated || 'never'}</p>
+                    <button id="recalcBtn" class="btn" style="display:block; margin:1rem auto;">recalculate</button>
+                    <hr style="border-color:var(--border-color); margin:2rem 0;">
+                    <h3>suggestions</h3>
+                    <ul style="margin-left:1.5rem;">${placementProfile.suggestions?.map(s=>`<li>${s}</li>`).join('') || '<li>complete resume & applications</li>'}</ul>
+                </div>
+            `;
+            document.getElementById('recalcBtn')?.addEventListener('click', ()=>{
+                calculateScore(true);
+                addToDigest('Placement score recalculated', 'score');
+                renderRoute();
+            });
+        }
+        else if (hash === '/settings') {
+            view.innerHTML = `
+                <div class="glass-card" style="max-width:700px; margin:2rem auto; padding:2.5rem;">
+                    <h2 style="margin-bottom:2rem;">settings</h2>
+                    <div class="profile-form">
+                        <h3 style="margin-bottom:1rem;">theme preference</h3>
+                        <div class="flex" style="margin-bottom:2rem;">
+                            <button class="btn secondary" onclick="document.body.setAttribute('data-theme', 'dark'); localStorage.setItem('careerBridge_theme', 'dark')">dark mode</button>
+                            <button class="btn secondary" onclick="document.body.setAttribute('data-theme', 'light'); localStorage.setItem('careerBridge_theme', 'light')">light mode</button>
+                        </div>
+                        
+                        <h3 style="margin-bottom:1rem;">profile</h3>
+                        <p><strong>name:</strong> ${userProfile?.fullName || 'not set'}</p>
+                        <p><strong>email:</strong> ${userProfile?.email || 'not set'}</p>
+                        ${userProfile?.linkedin ? `<p><strong>linkedin:</strong> ${userProfile.linkedin}</p>` : ''}
+                        ${userProfile?.github ? `<p><strong>github:</strong> ${userProfile.github}</p>` : ''}
+                        
+                        <button data-route="/onboarding" class="btn secondary" style="margin-top:1rem;">edit profile</button>
+                    </div>
+                </div>
+            `;
+        }
+        else if (hash === '/proof') {
+            const allTestsPassed = applications.length >=1 && (fresherResumeData?.personal?.name || experiencedResumeData?.personal?.name) && placementProfile.readinessScore>60;
+            view.innerHTML = allTestsPassed ? `
+                <div class="glass-card" style="padding:3rem; text-align:center; border:1px solid #4CAF50;">
+                    <h2 style="color:#4CAF50;">Project Successfully Shipped.</h2>
+                </div>
+            ` : `
+                <div class="glass-card" style="padding:3rem; text-align:center;">
+                    <p>not shipped yet: need application, resume, score > 60</p>
+                    <p class="text-secondary">current: ${applications.length} apps, ${placementProfile.readinessScore}% score</p>
+                    <button data-route="/dashboard" class="btn" style="margin-top:1rem;">continue</button>
+                </div>
+            `;
+        }
+        else if (hash === '/about') {
+            view.innerHTML = `<div class="glass-card" style="padding:2rem;"><h2>about CareerBridge</h2><p class="tagline" style="margin:1rem 0;">connecting talent to opportunity</p><p class="text-secondary">Your complete career platform for freshers and experienced professionals</p></div>`;
+        }
+        else if (hash === '/privacy') {
+            view.innerHTML = `<div class="glass-card" style="padding:2rem;"><h2>privacy</h2><p class="text-secondary">all data stored locally in your browser</p></div>`;
+        }
+        else if (hash === '/test') {
+            view.innerHTML = `
+                <div class="grid-3">
+                    <div class="glass-card" style="padding:1.5rem;">
+                        <h3>fresher resume</h3>
+                        <button class="btn w-full" id="testFresher" style="margin-top:1rem;">test</button>
+                    </div>
+                    <div class="glass-card" style="padding:1.5rem;">
+                        <h3>experienced resume</h3>
+                        <button class="btn w-full" id="testExperienced" style="margin-top:1rem;">test</button>
+                    </div>
+                    <div class="glass-card" style="padding:1.5rem;">
+                        <h3>placement score</h3>
+                        <button class="btn w-full" id="testScore" style="margin-top:1rem;">recalc</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('testFresher')?.addEventListener('click', ()=>{ 
+                window.location.hash = '#/ai-resume';
+            });
+            document.getElementById('testExperienced')?.addEventListener('click', ()=>{ 
+                window.location.hash = '#/ai-resume?type=experienced';
+            });
+            document.getElementById('testScore')?.addEventListener('click', ()=>{ 
+                calculateScore(true); 
+                alert('score recalculated'); 
+                renderRoute(); 
+            });
+        }
+        else {
+            view.innerHTML = `<div class="glass-card" style="padding:2rem;"><h2>404</h2><p class="text-secondary">page not found</p></div>`;
+        }
+
+        document.querySelectorAll('[data-route]').forEach(el => {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                const route = el.getAttribute('data-route');
+                if (route) window.location.hash = route;
+            });
+        });
+    }
+
+    function calculateScore(force = false) {
+        let resumeCompleteness = (fresherResumeData?.personal?.name || experiencedResumeData?.personal?.name) ? 30 : 0;
+        let applicationsScore = Math.min(applications.length * 10, 30);
+        let skillsScore = (fresherResumeData?.skills?.length || experiencedResumeData?.skills?.length) ? 20 : 0;
+        let profileComplete = userProfile?.onboardingCompleted ? 20 : 0;
+        
+        const total = resumeCompleteness + applicationsScore + skillsScore + profileComplete;
+        placementProfile.readinessScore = total;
+        placementProfile.lastCalculated = new Date().toISOString();
+        placementProfile.suggestions = [];
+        
+        if (!resumeCompleteness) placementProfile.suggestions.push('create your resume');
+        if (applications.length === 0) placementProfile.suggestions.push('apply to at least one job');
+        if (!skillsScore) placementProfile.suggestions.push('add your skills');
+        if (total < 60) placementProfile.suggestions.push('complete all profile sections');
+        
+        savePlacement();
+        return total;
+    }
+
+    function recommendedNextAction() {
+        if (!userProfile) return 'complete onboarding';
+        if (!fresherResumeData?.personal?.name && !experiencedResumeData?.personal?.name) return 'create your resume';
+        if (!applications.length) return 'apply to a job vacancy';
+        if (placementProfile.readinessScore < 60) return 'improve placement score';
+        return 'prepare for interviews';
+    }
+
+    window.addEventListener('load', () => {
+        if (!window.location.hash) window.location.hash = '#/';
+        renderRoute();
+        window.addEventListener('hashchange', renderRoute);
+    });
+})();
+</script>
+</body>
+</html>
